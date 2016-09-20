@@ -19,6 +19,7 @@ import com.baidu.disconf.client.common.model.DisConfCommonModel;
 import com.baidu.disconf.client.common.model.DisconfCenterBaseModel;
 import com.baidu.disconf.client.common.model.DisconfCenterFile;
 import com.baidu.disconf.client.common.model.DisconfCenterFile.FileItemValue;
+import com.baidu.disconf.client.config.DisClientConfig;
 import com.baidu.disconf.client.config.DisClientSysConfig;
 import com.baidu.disconf.client.scan.inner.statically.StaticScannerMgr;
 import com.baidu.disconf.client.scan.inner.statically.model.ScanStaticModel;
@@ -45,6 +46,15 @@ public class StaticScannerFileMgrImpl extends StaticScannerMgrImplBase implement
 
         // 转换配置文件
         List<DisconfCenterBaseModel> disconfCenterFiles = getDisconfFiles(scanModel);
+        //add global config
+        List<String> globalConfigNames = DisClientConfig.getInstance().getGlobalConfigNames();
+        for (String fileName : globalConfigNames) {			
+        	DisconfCenterBaseModel disconfCenterBaseModel =
+        			StaticScannerNonAnnotationFileMgrImpl.getDisconfCenterFile(fileName);
+        	disconfCenterFiles.add(disconfCenterBaseModel);
+        	LOGGER.info("add global config:{},RemoteServerUrl:{}",fileName,disconfCenterBaseModel.getRemoteServerUrl());
+		}
+        
         DisconfStoreProcessorFactory.getDisconfStoreFileProcessor().transformScanData(disconfCenterFiles);
     }
 

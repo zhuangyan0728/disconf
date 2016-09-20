@@ -1,5 +1,7 @@
 package com.baidu.disconf.client.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -193,6 +195,25 @@ public final class DisClientConfig {
      */
     @DisInnerConfigAnnotation(name = "disconf.enable_local_download_dir_in_class_path", defaultValue = "true")
     public boolean enableLocalDownloadDirInClassPath = true;
+    
+    /**
+     * 全局配置列表多个“,”隔开
+     */
+    @DisInnerConfigAnnotation(name = "disconf.global.configs", defaultValue = "")
+    public String globalConfigs;
+    
+    public final static String GLOBAL_CONFIG_APPNAME = "global_configs";
+    private List<String> globalConfigNames = new ArrayList<String>();
+    /**
+     * 全局配置文件名列表
+     * @return
+     */
+    public List<String> getGlobalConfigNames(){
+    	if(globalConfigNames.isEmpty() && globalConfigs != null &&  !globalConfigs.trim().equals("")){
+    		globalConfigNames.addAll(Arrays.asList(globalConfigs.split(",")));
+    	}
+    	return globalConfigNames;
+    }
 
     public List<String> getHostList() {
         return hostList;

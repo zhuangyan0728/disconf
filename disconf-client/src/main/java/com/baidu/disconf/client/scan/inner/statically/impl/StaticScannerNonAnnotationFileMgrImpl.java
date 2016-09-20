@@ -8,6 +8,7 @@ import com.baidu.disconf.client.common.constants.SupportFileTypeEnum;
 import com.baidu.disconf.client.common.model.DisConfCommonModel;
 import com.baidu.disconf.client.common.model.DisconfCenterBaseModel;
 import com.baidu.disconf.client.common.model.DisconfCenterFile;
+import com.baidu.disconf.client.config.DisClientConfig;
 import com.baidu.disconf.client.config.DisClientSysConfig;
 import com.baidu.disconf.client.scan.inner.statically.StaticScannerMgr;
 import com.baidu.disconf.client.scan.inner.statically.model.ScanStaticModel;
@@ -92,9 +93,12 @@ public class StaticScannerNonAnnotationFileMgrImpl extends StaticScannerMgrImplB
         DisConfCommonModel disConfCommonModel = makeDisConfCommonModel("", "");
         disconfCenterFile.setDisConfCommonModel(disConfCommonModel);
 
+      //是否全局配置
+        boolean isGlobalConfig = DisClientConfig.getInstance().getGlobalConfigNames().contains(fileName);
+        
         // Remote URL
         String url = DisconfWebPathMgr.getRemoteUrlParameter(DisClientSysConfig.getInstance().CONF_SERVER_STORE_ACTION,
-                disConfCommonModel.getApp(),
+        		isGlobalConfig ? DisClientConfig.GLOBAL_CONFIG_APPNAME : disConfCommonModel.getApp(),
                 disConfCommonModel.getVersion(),
                 disConfCommonModel.getEnv(),
                 disconfCenterFile.getFileName(),
